@@ -1,5 +1,4 @@
 (ns webdev.core
-  (:require [alex-and-georges.debug-repl :refer [debug-repl]])
   (:require [webdev.item.model :as items]
             [webdev.item.handler :refer [handle-index-items
                                          handle-create-item]])
@@ -9,6 +8,7 @@
             [ring.middleware.file-info :refer [wrap-file-info]]
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.handler.dump :refer [handle-dump]]
+            [hiccup.core :refer [handle-dump]]
             [compojure.core :refer [defroutes ANY GET POST PUT DELETE]]
             [compojure.route :refer [not-found]]))
 

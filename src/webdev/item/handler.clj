@@ -1,5 +1,4 @@
 (ns webdev.item.handler
-  (:require [alex-and-georges.debug-repl :refer [debug-repl]])
   (:require [webdev.item.model :refer [create-item
                                        read-items
                                        update-item
