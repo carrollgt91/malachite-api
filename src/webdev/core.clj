@@ -7,7 +7,6 @@
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.file-info :refer [wrap-file-info]]
             [ring.middleware.resource :refer [wrap-resource]]
-            [ring.handler.dump :refer [handle-dump]]
             [hiccup.core :refer [handle-dump]]
             [compojure.core :refer [defroutes ANY GET POST PUT DELETE]]
             [compojure.route :refer [not-found]]))
@@ -29,7 +28,6 @@
 (defroutes routes
   (GET "/" [] greet)
   (GET "/goodbye" [] goodbye)
-  (ANY "/request" [] handle-dump)
   (GET "/items" [] handle-index-items)
   (POST "/items" [] handle-create-item)
   (not-found "Page not found."))
