@@ -7,7 +7,7 @@
                  [ring "1.3.1"]
                  [compojure "1.2.1"]
                  [org.clojure/java.jdbc "0.3.5"]
-                 [org.postgresql/postgresql "9.3-1102-jdbc41"]
+                 [org.postgresql/postgresql "9.3-1102-jdbc4"]
                  [hiccup "1.0.5"]]
   :main webdev.core
 
