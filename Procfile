@@ -1,1 +1,1 @@
-web: java $JVM_OPTS -cp target/webdev.jar clojure.main -m webdev.core $PORT
+web: java $JVM_OPTS -cp target/malachite-api.jar clojure.main -m malachite-api.core $PORT

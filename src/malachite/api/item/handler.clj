@@ -1,13 +1,13 @@
-(ns webdev.item.handler
-  (:require [webdev.item.model :refer [create-item
-                                       read-items
-                                       update-item
-                                       delete-item]]))
+(ns malachite.api.item.handler
+  (:require [malachite.api.item.model :refer [create-item
+                                              read-items
+                                              update-item
+                                              delete-item]]))
 
 
 
 (defn handle-index-items [req]
-  (let [db (:webdev/db req)
+  (let [db (:malachite.api/db req)
         items (read-items db)]
     {:status 200
      :headers {}
@@ -21,7 +21,7 @@
 
 
 (defn handle-create-item [req]
-  (let [db (:webdev/db req)
+  (let [db (:malachite.api/db req)
         name (get-in req [:params "name"])
         description (get-in req [:params "description"])
         item-id (create-item db name description)]

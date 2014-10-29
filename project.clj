@@ -1,4 +1,4 @@
-(defproject webdev "0.1.0-SNAPSHOT"
+(defproject malachite "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -9,11 +9,12 @@
                  [org.clojure/java.jdbc "0.3.5"]
                  [org.postgresql/postgresql "9.3-1102-jdbc4"]
                  [hiccup "1.0.5"]]
-  :main webdev.core
+
+  :main malachite.api.core
 
   :min-lein-version "2.0.0"
 
-  :uberjar-name "webdev.jar"
+  :uberjar-name "malachite.jar"
 
   :profiles {:dev
-             {:main webdev.core/-dev-main}})
+             {:main malachite.api.core/-dev-main}})

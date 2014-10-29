@@ -1,7 +1,7 @@
-(ns webdev.core
-  (:require [webdev.item.model :as items]
-            [webdev.item.handler :refer [handle-index-items
-                                         handle-create-item]])
+(ns malachite.api.core
+  (:require [malachite.api.item.model :as items]
+            [malachite.api.item.handler :refer [handle-index-items
+                                                handle-create-item]])
   (:require [ring.adapter.jetty :as jetty]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.params :refer [wrap-params]]
@@ -13,7 +13,7 @@
 
 (def db (or
          (System/getenv "DATABASE_URL")
-         "jdbc:postgresql://localhost/webdev"))
+         "jdbc:postgresql://localhost/malachite-api-dev"))
 
 (defn greet [req]
   {:status 200
@@ -35,11 +35,11 @@
 
 (defn wrap-db [hdlr]
   (fn [req]
-    (hdlr (assoc req :webdev/db db))))
+    (hdlr (assoc req :malachite.api/db db))))
 
 (defn wrap-server [hdlr]
   (fn [req]
-    (assoc-in (hdlr req) [:headers "Server:"] "List-a-roni")))
+    (assoc-in (hdlr req) [:headers "Server:"] "Malachite API")))
 
 (def app
   (wrap-db
