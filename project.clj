@@ -6,6 +6,7 @@
   :plugins [[lein-ring "0.8.13"]]
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [ring "1.3.1"]
+                 [ring/ring-json "0.3.1"]
                  [compojure "1.2.1"]
                  [org.clojure/java.jdbc "0.3.5"]
                  [org.postgresql/postgresql "9.3-1102-jdbc4"]

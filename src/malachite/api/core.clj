@@ -2,45 +2,61 @@
   (:require [malachite.api.item.model :as items]
             [malachite.api.item.handler :refer [handle-index-items
                                                 handle-create-item]])
-  (:require [ring.adapter.jetty :as jetty]
+  (:use ring.middleware.json)
+
+  (:require [clojure.string :refer [lower-case]]
+            [ring.adapter.jetty :as jetty]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.file-info :refer [wrap-file-info]]
             [ring.handler.dump :refer [handle-dump]]
-            [compojure.core :refer [defroutes ANY GET POST PUT DELETE]]
-            [compojure.route :refer [not-found]]))
+            [compojure.core :refer [routes defroutes context ANY GET POST PUT DELETE]]
+            [compojure.route :refer [not-found]]
+            [ring.util.response :refer [response]]))
 
 (def db (or
          (System/getenv "DATABASE_URL")
          "jdbc:postgresql://localhost/malachite-api-dev"))
+
+(defn- is-json-req [req]
+  (or
+   (= (:content-type req) "application/json"))
+   (= (lower-case (str (get-in req [:params "format"])))
+      "json"))
+
+(defn ensure-json [hdlr]
+  (fn [req]
+    (if (is-json-req req)
+      (hdlr req)
+      (response {:message "We only talk in JSON, dawg"}))))
 
 (defn greet [req]
   {:status 200
    :body "hello world"
    :headers {}})
 
-(defroutes routes
+(defn api-routes []
+  (routes
+   (GET "/" [] "root baby")
+   (GET "/items" [] handle-index-items)
+   (POST "/items" [] handle-create-item)))
+
+(defroutes app-routes
+  (context "/api" [] (ensure-json (api-routes)))
   (GET "/" [] greet)
   (ANY "/request" [] handle-dump)
-  (GET "/items" [] handle-index-items)
-  (POST "/items" [] handle-create-item)
   (not-found "Page not found."))
 
 (defn wrap-db [hdlr]
   (fn [req]
     (hdlr (assoc req :malachite.api/db db))))
 
-(defn wrap-server [hdlr]
-  (fn [req]
-    (assoc-in (hdlr req) [:headers "Server:"] "Malachite API")))
-
 (def app
   (wrap-db
    (wrap-file-info
      (wrap-params
-      (wrap-server
-        routes))
-     "static")))
+      (wrap-json-response
+       app-routes)))))
 
 (defn init []
   (items/create-table db))
