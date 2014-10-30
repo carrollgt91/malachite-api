@@ -9,11 +9,17 @@
                  [compojure "1.2.1"]
                  [org.clojure/java.jdbc "0.3.5"]
                  [org.postgresql/postgresql "9.3-1102-jdbc4"]
-                 [hiccup "1.0.5"]]
+                 [camel-snake-kebab "0.2.5"]
+                 [cheshire "5.3.1"]
+                 [clj-http "1.0.1"]
+                 [rest-cljer "0.1.15"]
+                 [midje "1.6.3"]
+                 [environ "1.0.0"]]
 
   :main malachite.api.core
 
-  :ring {:handler malachite.api.core/app}
+  :ring {:handler malachite.api.core/app
+         :init malachite.api.core/init}
 
   :min-lein-version "2.0.0"
 

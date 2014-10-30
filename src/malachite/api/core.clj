@@ -50,12 +50,15 @@
         routes))
      "static"))))
 
+(defn init []
+  (items/create-table db))
+
 (defn -main [port]
-   (items/create-table db)
+   (init)
    (jetty/run-jetty app
                     {:port (Integer. port)}))
 
  (defn -dev-main [port]
-   (items/create-table db)
+   (init)
    (jetty/run-jetty (wrap-reload #'app)
                     {:port (Integer. port)}))
