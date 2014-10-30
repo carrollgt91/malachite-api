@@ -6,7 +6,6 @@
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.file-info :refer [wrap-file-info]]
-            [ring.middleware.resource :refer [wrap-resource]]
             [ring.handler.dump :refer [handle-dump]]
             [compojure.core :refer [defroutes ANY GET POST PUT DELETE]]
             [compojure.route :refer [not-found]]))
@@ -20,14 +19,8 @@
    :body "hello world"
    :headers {}})
 
-(defn goodbye [req]
-  {:status 200
-   :body "goodbye, cruel world"
-   :headers {}})
-
 (defroutes routes
   (GET "/" [] greet)
-  (GET "/goodbye" [] goodbye)
   (ANY "/request" [] handle-dump)
   (GET "/items" [] handle-index-items)
   (POST "/items" [] handle-create-item)
@@ -44,11 +37,10 @@
 (def app
   (wrap-db
    (wrap-file-info
-    (wrap-resource
      (wrap-params
       (wrap-server
         routes))
-     "static"))))
+     "static")))
 
 (defn init []
   (items/create-table db))
