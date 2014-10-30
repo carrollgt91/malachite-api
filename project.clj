@@ -15,7 +15,8 @@
                  [clj-http "1.0.1"]
                  [rest-cljer "0.1.15"]
                  [midje "1.6.3"]
-                 [environ "1.0.0"]]
+                 [environ "1.0.0"]
+                 [peridot "0.3.0"]]
 
   :main malachite.api.core
 
