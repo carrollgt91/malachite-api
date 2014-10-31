@@ -1,7 +1,8 @@
 (ns malachite.api.integration.api-test
-  (:use midje.sweet)
-  (:require [malachite.api.core :as core]))
+  (:use midje.sweet
+        peridot.core)
+  (:require [malachite.api.core]))
 
-(fact "this should run somehow and will test 1 + 1"
-  (+ 1 1) => 2
-  (+ 2 2) => 4)
+(fact "the root url should return hello world"
+  (get-in (-> (session malachite.api.core/app)
+      (request "/")) [:response :body]) => "hello world")
