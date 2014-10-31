@@ -1,8 +1,16 @@
 (ns malachite.api.integration.api-test
   (:use midje.sweet
-        peridot.core)
-  (:require [malachite.api.core]))
+        malachite.api.core
+        ring.mock.request
+        cheshire.core))
 
 (fact "the root url should return hello world"
-  (get-in (-> (session malachite.api.core/app)
-      (request "/")) [:response :body]) => "hello world")
+  ((app (request :get "/")) :body) => "hello world")
+
+(facts "about the api"
+  (def response (app (request :get "/api")))
+  (get-in response  [:headers "Content-Type"])
+        => "application/json; charset=utf-8"
+  (response :status)
+        => 406
+  ((parse-string (response :body)) "message") => "We only talk in JSON, dawg")

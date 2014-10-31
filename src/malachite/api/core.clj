@@ -12,7 +12,7 @@
             [ring.handler.dump :refer [handle-dump]]
             [compojure.core :refer [routes defroutes context ANY GET POST PUT DELETE]]
             [compojure.route :refer [not-found]]
-            [ring.util.response :refer [response]]))
+            [ring.util.response :refer [response status]]))
 
 (def db (or
          (System/getenv "DATABASE_URL")
@@ -28,7 +28,8 @@
   (fn [req]
     (if (is-json-req req)
       (hdlr req)
-      (response {:message "We only talk in JSON, dawg"}))))
+      (-> (response {:message "We only talk in JSON, dawg"})
+          (status 406)))))
 
 (defn greet [req]
   {:status 200
@@ -37,7 +38,7 @@
 
 (defn api-routes []
   (routes
-   (GET "/" [] "root baby")
+   (GET "/" [] (response {:root true}))
    (GET "/items" [] handle-index-items)
    (POST "/items" [] handle-create-item)))
 
