@@ -1,8 +1,9 @@
 (ns malachite.api.core
-  (:require [malachite.api.item.model :as items]
-            [malachite.api.item.handler :refer [handle-index-items
-                                                handle-create-item]])
+  (:require [malachite.api.user.model :as users]
+            [malachite.api.user.handler :refer [add-user]])
+  
   (:use ring.middleware.json)
+  (:use alex-and-georges.debug-repl)
 
   (:require [clojure.string :refer [lower-case]]
             [ring.adapter.jetty :as jetty]
@@ -20,9 +21,9 @@
 
 (defn- is-json-req [req]
   (or
-   (= (:content-type req) "application/json"))
+   (= (:content-type req) "application/json")
    (= (lower-case (str (get-in req [:params "format"])))
-      "json"))
+      "json")))
 
 (defn ensure-json [hdlr]
   (fn [req]
@@ -39,8 +40,7 @@
 (defn api-routes []
   (routes
    (GET "/" [] (response {:root true}))
-   (GET "/items" [] handle-index-items)
-   (POST "/items" [] handle-create-item)))
+   (POST "/users" [] add-user)))
 
 (defroutes app-routes
   (context "/api" [] (ensure-json (api-routes)))
@@ -53,14 +53,15 @@
     (hdlr (assoc req :malachite.api/db db))))
 
 (def app
-  (wrap-db
-   (wrap-file-info
-     (wrap-params
-      (wrap-json-response
-       app-routes)))))
+  (-> app-routes
+      wrap-db
+      wrap-file-info
+      wrap-json-response
+      wrap-json-body
+      wrap-params))
 
 (defn init []
-  (items/create-table db))
+  (users/create-table db))
 
 (defn -main [port]
    (init)
