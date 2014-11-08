@@ -28,4 +28,5 @@
   :uberjar-name "malachite.jar"
 
   :profiles {:dev
-             {:main malachite.api.core/-dev-main}})
+             {:dependencies [[ring-serve "0.1.2"]
+                             [org.mortbay.jetty/jetty "6.1.26"]]}})
