@@ -1,6 +1,8 @@
 (ns malachite.api.core
   (:require [malachite.api.user.model :as users]
-            [malachite.api.user.handler :refer [add-user]])
+            [malachite.api.track.model :as tracks]
+            [malachite.api.user.handler :refer [add-user]]
+            [malachite.api.track.handler :refer [add-track]])
   
   (:use ring.middleware.json)
   (:use alex-and-georges.debug-repl)
@@ -61,7 +63,8 @@
       wrap-params))
 
 (defn init []
-  (users/create-table db))
+  (users/create-table db)
+  (tracks/create-table db))
 
 (defn -main [port]
    (init)

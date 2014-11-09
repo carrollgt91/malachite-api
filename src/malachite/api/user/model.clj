@@ -9,20 +9,20 @@
   (db/execute!
    db
    ["CREATE TABLE IF NOT EXISTS users
-    (id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    (id SERIAL PRIMARY KEY,
     username TEXT NOT NULL UNIQUE,
     soundcloud_id INTEGER NOT NULL UNIQUE,
     date_created TIMESTAMPTZ NOT NULL DEFAULT now())"]))
 
 (defn create-user [db username soundcloud-id]
   (try
-    (:username (first (db/query
+    (first (db/query
                  db
                  ["INSERT INTO users (username, soundcloud_id)
                    VALUES (?, ?)
-                   RETURNING username"
+                   RETURNING *"
                   username
-                  (Integer. soundcloud-id)])))
+                  (Integer. soundcloud-id)]))
     (catch Exception e {:error "User already exists"})))
 
 (defn find-user [db id]
