@@ -2,7 +2,8 @@
   (:require [malachite.api.user.model :as users]
             [malachite.api.track.model :as tracks]
             [malachite.api.user.handler :refer [add-user]]
-            [malachite.api.track.handler :refer [add-track]])
+            [malachite.api.track.handler :refer [add-track
+                                                 find-user-tracks]])
   
   (:use ring.middleware.json)
   (:use alex-and-georges.debug-repl)
@@ -43,6 +44,7 @@
   (routes
    (GET "/" [] (response {:root true}))
    (POST "/users" [] add-user)
+   (GET "/users/:user_id/tracks" [user-id] find-user-tracks)
    (POST "/tracks" [] add-track)))
 
 (defroutes app-routes
