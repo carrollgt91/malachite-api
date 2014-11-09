@@ -33,6 +33,9 @@
    ["CREATE TABLE IF NOT EXISTS tracks
     (track_id SERIAL PRIMARY KEY,
     soundcloud_id INTEGER NOT NULL UNIQUE,
+    title VARCHAR(256),
+    username VARCHAR(64),
+    artwork_url VARCHAR(256),
     date_created TIMESTAMPTZ NOT NULL DEFAULT now());"])
   (create-relationship-tables db))
 

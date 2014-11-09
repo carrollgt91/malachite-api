@@ -8,7 +8,8 @@
                                                  add-track-to-playlist
                                                  find-playlist-tracks]]
             [malachite.api.playlist.handler :refer [add-playlist
-                                                 find-user-playlists]])
+                                                 find-user-playlists]]
+            [malachite.api.soundcloud.wrapper :refer [likes]])
   
   (:use ring.middleware.json)
   (:use alex-and-georges.debug-repl)
@@ -54,7 +55,8 @@
    (GET "/users/:user_id/playlists" [user-id] find-user-playlists)
    (GET "/playlists/:playlist_id" [playlist-id] find-playlist-tracks)
    (PUT "/tracks/:track_id" [track-id] add-track-to-playlist)
-   (POST "/tracks" [] add-track)))
+   (POST "/tracks" [] add-track)
+   (GET "/likes" [] likes)))
 
 (defroutes app-routes
   (context "/api" [] (ensure-json (api-routes)))
