@@ -11,6 +11,14 @@
       position INTEGER,
       CONSTRAINT user_track_pkey PRIMARY KEY (user_id, track_id));"]))
 
+(defn create-playlist-track-table [db]
+  (db/execute!
+    db
+    ["CREATE TABLE IF NOT EXISTS playlist_tracks
+      (playlist_id INTEGER REFERENCES playlists (playlist_id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL,
+      track_id INTEGER REFERENCES tracks (track_id) ON UPDATE CASCADE NOT NULL,
+      position INTEGER,
+      CONSTRAINT playlist_track_pkey PRIMARY KEY (playlist_id, track_id));"]))
 
 (defn create-relationship-tables [db]
   (create-user-track-table db))

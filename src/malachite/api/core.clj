@@ -1,9 +1,12 @@
 (ns malachite.api.core
   (:require [malachite.api.user.model :as users]
             [malachite.api.track.model :as tracks]
+            [malachite.api.playlist.model :as playlists]
             [malachite.api.user.handler :refer [add-user]]
             [malachite.api.track.handler :refer [add-track
-                                                 find-user-tracks]])
+                                                 find-user-tracks]]
+            [malachite.api.playlist.handler :refer [add-playlist
+                                                 find-user-playlists]])
   
   (:use ring.middleware.json)
   (:use alex-and-georges.debug-repl)
@@ -45,6 +48,8 @@
    (GET "/" [] (response {:root true}))
    (POST "/users" [] add-user)
    (GET "/users/:user_id/tracks" [user-id] find-user-tracks)
+   (POST "/users/:user_id/playlists" [user-id] add-playlist)
+   (GET "/users/:user_id/playlists" [user-id] find-user-playlists)
    (POST "/tracks" [] add-track)))
 
 (defroutes app-routes
@@ -67,7 +72,8 @@
 
 (defn init []
   (users/create-table db)
-  (tracks/create-table db))
+  (tracks/create-table db)
+  (playlists/create-table db))
 
 (defn -main [port]
    (init)
