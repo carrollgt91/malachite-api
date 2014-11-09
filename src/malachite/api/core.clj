@@ -23,7 +23,8 @@
             [ring.handler.dump :refer [handle-dump]]
             [compojure.core :refer [routes defroutes context ANY GET POST PUT DELETE]]
             [compojure.route :refer [not-found]]
-            [ring.util.response :refer [response status]]))
+            [ring.util.response :refer [response status]]
+            [ring.middleware.cors :refer [wrap-cors]]))
 
 (def db (or
          (System/getenv "DATABASE_URL")
@@ -76,7 +77,10 @@
       wrap-file-info
       wrap-json-response
       wrap-json-body
-      wrap-params))
+      wrap-params
+      (wrap-cors :access-control-allow-origin #"http://localhost:8080"
+                 :access-control-allow-methods [:get :put :post]
+                 :access-control-allow-headers ["Content-Type"])))
 
 (defn init []
   (users/create-table db)
