@@ -5,7 +5,8 @@
             [malachite.api.user.handler :refer [add-user]]
             [malachite.api.track.handler :refer [add-track
                                                  find-user-tracks
-                                                 add-track-to-playlist]]
+                                                 add-track-to-playlist
+                                                 find-playlist-tracks]]
             [malachite.api.playlist.handler :refer [add-playlist
                                                  find-user-playlists]])
   
@@ -51,6 +52,7 @@
    (GET "/users/:user_id/tracks" [user-id] find-user-tracks)
    (POST "/users/:user_id/playlists" [user-id] add-playlist)
    (GET "/users/:user_id/playlists" [user-id] find-user-playlists)
+   (GET "/playlists/:playlist_id" [playlist-id] find-playlist-tracks)
    (PUT "/tracks/:track_id" [track-id] add-track-to-playlist)
    (POST "/tracks" [] add-track)))
 

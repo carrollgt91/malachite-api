@@ -2,7 +2,8 @@
   (:use alex-and-georges.debug-repl)
   (:require [malachite.api.track.model :refer [create-track
                                                find-by-user
-                                               update-track]]
+                                               update-track
+                                               find-by-playlist]]
             [ring.util.response :refer [response status]]))
 
 (defn add-track [req]
@@ -32,6 +33,16 @@
   (let [db (:malachite.api/db req)
         user-id (get-in req [:params :user_id])
         res (find-by-user db (Integer. user-id))]
+    (if-not (:error res)
+      (response res)
+      (->
+        (response res)
+        (status 400)))))
+
+(defn find-playlist-tracks [req]
+  (let [db (:malachite.api/db req)
+        playlist-id (get-in req [:params :playlist_id])
+        res (find-by-playlist db (Integer. playlist-id))]
     (if-not (:error res)
       (response res)
       (->

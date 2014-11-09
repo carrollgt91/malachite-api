@@ -76,3 +76,12 @@
         AND user_tracks.user_id = ?;"
      user-id])]
     tracks))
+
+(defn find-by-playlist [db playlist-id]
+  (let [tracks (db/query
+    db
+    ["SELECT * FROM tracks, playlist_tracks
+      WHERE tracks.track_id = playlist_tracks.track_id
+        AND playlist_tracks.playlist_id = ?;"
+     playlist-id])]
+    tracks))
