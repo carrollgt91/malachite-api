@@ -34,6 +34,18 @@
         (track-model/create-track db user-id (first tracks))
         (recur (rest tracks))))))
 
+(defn get-user-playqueue [db user-id]
+  (let [playqueue-id
+        (first (db/query
+          db
+          ["SELECT playlist_id FROM playlists
+            WHERE playlists.user_id = ?
+              AND playlists.is_playqueue = true;"
+              (Integer. user-id)]))
+        tracks
+          (track-model/find-by-playlist db (get playqueue-id :playlist_id))]
+    tracks))
+
 (defn find-user [db id]
   (db/query
     db

@@ -2,7 +2,8 @@
   (:require [malachite.api.user.model :as users]
             [malachite.api.track.model :as tracks]
             [malachite.api.playlist.model :as playlists]
-            [malachite.api.user.handler :refer [add-user]]
+            [malachite.api.user.handler :refer [add-user
+                                                get-playqueue]]
             [malachite.api.track.handler :refer [add-track
                                                  find-user-tracks
                                                  add-track-to-playlist
@@ -53,6 +54,7 @@
    (GET "/users/:user_id/tracks" [user-id] find-user-tracks)
    (POST "/users/:user_id/playlists" [user-id] add-playlist)
    (GET "/users/:user_id/playlists" [user-id] find-user-playlists)
+   (GET "/users/:user_id/playqueue" [user-id] get-playqueue)
    (GET "/playlists/:playlist_id" [playlist-id] find-playlist-tracks)
    (PUT "/tracks/:track_id" [track-id] add-track-to-playlist)
    (POST "/tracks" [] add-track)

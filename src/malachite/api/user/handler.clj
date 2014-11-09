@@ -1,7 +1,9 @@
 (ns malachite.api.user.handler
   (:use alex-and-georges.debug-repl)
   (:require [malachite.api.user.model :refer [create-user
-                                              save-likes]]
+                                              save-likes
+                                              get-user-playqueue]]
+            [malachite.api.playlist.model :refer [create-playlist]]
             [ring.util.response :refer [response status]]))
 
 (defn add-user [req]
@@ -12,7 +14,14 @@
     (if-not (res :error)
       (do 
         (save-likes db (:user_id res) (:soundcloud_id res))
+        (create-playlist db (:user_id res) "Playqueue" false true)
         (response res))
       (->
         (response res)
         (status 400)))))
+
+(defn get-playqueue [req]
+  (let [db (:malachite.api/db req)
+        user-id (get-in req [:params :user_id])
+        res (get-user-playqueue db user-id)]
+      (response res)))
