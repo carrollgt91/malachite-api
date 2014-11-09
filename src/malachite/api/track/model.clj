@@ -39,15 +39,18 @@
     date_created TIMESTAMPTZ NOT NULL DEFAULT now());"])
   (create-relationship-tables db))
 
-(defn create-track [db user-id soundcloud-id]
+(defn create-track [db user-id sc-track]
   (try
     (let [track (first 
                   (db/query
                   db
-                  ["INSERT INTO tracks (soundcloud_id)
-                   VALUES (?)
+                  ["INSERT INTO tracks (soundcloud_id, title, username, artwork_url)
+                   VALUES (?,?,?,?)
                    RETURNING *"
-                  (Integer. soundcloud-id)]))]
+                  (get sc-track "id")
+                  (get sc-track "title")
+                  (get-in sc-track ["user" "username"])
+                  (get sc-track "artwork_url")]))]
       (db/query
         db
         ["INSERT INTO user_tracks (track_id, user_id)

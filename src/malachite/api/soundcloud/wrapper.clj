@@ -5,6 +5,9 @@
 
 (def ^:private client-id "251c9152fb3757d609504877ed494ae0")
 
+(defn- streamable? [track]
+  (get track "streamable"))
+
 (defn likes [user-id]
   (let [resp (http/get 
               (str "https://api.soundcloud.com/users/" 
@@ -12,5 +15,6 @@
               "/favorites?client_id="
               client-id
               "&format=json"))
-        parsed-resp (parse-string (:body resp))]
-    parsed-resp))
+        parsed-resp (parse-string (:body resp))
+        filtered-resp (filter streamable? parsed-resp)]
+    filtered-resp))

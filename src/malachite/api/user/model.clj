@@ -1,6 +1,8 @@
 (ns malachite.api.user.model
   (:use alex-and-georges.debug-repl)
-  (:require [clojure.java.jdbc :as db]))
+  (:require [clojure.java.jdbc :as db]
+            [malachite.api.soundcloud.wrapper :as sc]
+            [malachite.api.track.model :as track-model]))
 
 (defn create-table [db]
   (db/execute!
@@ -24,6 +26,13 @@
                   username
                   (Integer. soundcloud-id)]))
     (catch Exception e {:error "User already exists"})))
+
+(defn save-likes [db user-id user-soundcloud-id]  
+  (let [likes (sc/likes user-soundcloud-id)]
+    (loop [tracks likes]
+      (when (seq tracks)
+        (track-model/create-track db user-id (first tracks))
+        (recur (rest tracks))))))
 
 (defn find-user [db id]
   (db/query
