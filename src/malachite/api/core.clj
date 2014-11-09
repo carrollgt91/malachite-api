@@ -42,7 +42,8 @@
 (defn api-routes []
   (routes
    (GET "/" [] (response {:root true}))
-   (POST "/users" [] add-user)))
+   (POST "/users" [] add-user)
+   (POST "/tracks" [] add-track)))
 
 (defroutes app-routes
   (context "/api" [] (ensure-json (api-routes)))

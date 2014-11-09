@@ -9,7 +9,7 @@
   (db/execute!
    db
    ["CREATE TABLE IF NOT EXISTS users
-    (id SERIAL PRIMARY KEY,
+    (user_id SERIAL PRIMARY KEY,
     username TEXT NOT NULL UNIQUE,
     soundcloud_id INTEGER NOT NULL UNIQUE,
     date_created TIMESTAMPTZ NOT NULL DEFAULT now())"]))
