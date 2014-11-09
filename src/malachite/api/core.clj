@@ -4,7 +4,8 @@
             [malachite.api.playlist.model :as playlists]
             [malachite.api.user.handler :refer [add-user]]
             [malachite.api.track.handler :refer [add-track
-                                                 find-user-tracks]]
+                                                 find-user-tracks
+                                                 add-track-to-playlist]]
             [malachite.api.playlist.handler :refer [add-playlist
                                                  find-user-playlists]])
   
@@ -50,6 +51,7 @@
    (GET "/users/:user_id/tracks" [user-id] find-user-tracks)
    (POST "/users/:user_id/playlists" [user-id] add-playlist)
    (GET "/users/:user_id/playlists" [user-id] find-user-playlists)
+   (PUT "/tracks/:track_id" [track-id] add-track-to-playlist)
    (POST "/tracks" [] add-track)))
 
 (defroutes app-routes
@@ -72,8 +74,8 @@
 
 (defn init []
   (users/create-table db)
-  (tracks/create-table db)
-  (playlists/create-table db))
+  (playlists/create-table db)
+  (tracks/create-table db))
 
 (defn -main [port]
    (init)

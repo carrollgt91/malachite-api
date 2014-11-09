@@ -21,7 +21,8 @@
       CONSTRAINT playlist_track_pkey PRIMARY KEY (playlist_id, track_id));"]))
 
 (defn create-relationship-tables [db]
-  (create-user-track-table db))
+  (create-user-track-table db)
+  (create-playlist-track-table db))
 
 (defn create-table [db]
   (db/execute!
@@ -54,21 +55,18 @@
       track)
     (catch Exception e {:error (.getMessage e)})))
 
-; TODO
-(defn update-track [db user-id soundcloud-id]
+(defn update-track [db playlist-id track-id position]
   (try
-    (let [track (first (db/query
-                 db
-                 ["INSERT INTO tracks (soundcloud_id)
-                   VALUES (?)
-                   RETURNING soundcloud_id"
-                  (Integer. soundcloud-id)]))]
-      (db/query
-        db
-        ["INSERT INTO user_tracks (track_id, user_id)"])
-      track)
+    (db/query
+      db
+      ["INSERT INTO playlist_tracks (track_id, playlist_id, position)
+       VALUES (?,?,?)
+       RETURNING *"
+       (Integer. track-id)
+       (Integer. playlist-id)
+       (Integer. position)])
     
-    (catch Exception e {:error "Error creating track"})))
+    (catch Exception e {:error (.getMessage e)})))
 
 (defn find-by-user [db user-id]
   (let [tracks (db/query

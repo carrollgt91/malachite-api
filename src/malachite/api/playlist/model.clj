@@ -13,19 +13,21 @@
     user_id INTEGER REFERENCES users (user_id) ON UPDATE CASCADE NOT NULL,
     title VARCHAR(64) NOT NULL,
     is_likes BOOLEAN NOT NULL DEFAULT false,
+    is_playqueue BOOLEAN NOT NULL DEFAULT false,
     date_created TIMESTAMPTZ NOT NULL DEFAULT now());"]))
 
-(defn create-playlist [db user-id title is-likes]
+(defn create-playlist [db user-id title is-likes is-playqueue]
   (try
     (first 
       (db/query
        db
-       ["INSERT INTO playlists (user_id, title, is_likes)
-         VALUES (?, ?, ?)
+       ["INSERT INTO playlists (user_id, title, is_likes, is_playqueue)
+         VALUES (?, ?, ?, ?)
          RETURNING *"
         (Integer. user-id)
         title,
-        is-likes]))
+        is-likes
+        is-playqueue]))
     (catch Exception e {:error (.getMessage e)})))
 
 (defn find-by-user [db user-id]

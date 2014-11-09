@@ -8,8 +8,9 @@
   (let [db (:malachite.api/db req)
         user-id (get-in req [:params :user_id])
         title (get-in req [:body "title"])
-        is-likes (get-in req [:body "isLikes"])
-        res (create-playlist db user-id title is-likes)]
+        is-likes (get-in req [:body "is_likes"])
+        is-playqueue (get-in req [:body "is_playqueue"])
+        res (create-playlist db user-id title is-likes is-playqueue)]
     (if-not (:error res)
       (response res)
       (->
