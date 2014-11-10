@@ -13,6 +13,7 @@
             [malachite.api.soundcloud.wrapper :refer [likes]])
   
   (:use ring.middleware.json)
+  (:use alex-and-georges.debug-repl)
 
   (:require [clojure.string :refer [lower-case]]
             [ring.adapter.jetty :as jetty]
@@ -22,7 +23,7 @@
             [ring.handler.dump :refer [handle-dump]]
             [compojure.core :refer [routes defroutes context ANY GET POST PUT DELETE]]
             [compojure.route :refer [not-found]]
-            [ring.util.response :refer [response status]]
+            [ring.util.response :refer [response status header]]
             [ring.middleware.cors :refer [wrap-cors]]))
 
 (def db (or
@@ -34,6 +35,16 @@
    (= (:content-type req) "application/json")
    (= (lower-case (str (get-in req [:params "format"])))
       "json")))
+
+(defn handle-preflight-options [hdlr]
+  (fn [req]
+    (if (= :options (:request-method req))
+      (-> (response {:yup "yup"})
+          (status 200)
+          (header "Access-Control-Allow-Origin" "*")
+          (header "Access-Control-Request-Method" "POST,GET,PUT,DELETE,OPTIONS")
+          (header "Access-Control-Allow-Headers" "X-Requested-With,Content-Type"))
+      (hdlr req))))
 
 (defn ensure-json [hdlr]
   (fn [req]
@@ -73,12 +84,12 @@
 
 (def app
   (-> app-routes
+      handle-preflight-options
       wrap-db
       wrap-file-info
       wrap-json-response
       wrap-json-body
-      wrap-params
-      ))
+      wrap-params))
 
 (defn init []
   (users/create-table db)

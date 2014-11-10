@@ -17,7 +17,8 @@
                  [midje "1.6.3"]
                  [environ "1.0.0"]
                  [ring-mock "0.1.5"]
-                 [ring-cors "0.1.4"]]
+                 [ring-cors "0.1.4"]
+                 [ring/ring-headers "0.1.1"]]
 
   :main malachite.api.core
 
