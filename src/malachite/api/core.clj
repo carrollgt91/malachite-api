@@ -13,8 +13,6 @@
             [malachite.api.soundcloud.wrapper :refer [likes]])
   
   (:use ring.middleware.json)
-  (:use alex-and-georges.debug-repl)
-
   (:require [clojure.string :refer [lower-case]]
             [ring.adapter.jetty :as jetty]
             [ring.middleware.reload :refer [wrap-reload]]
