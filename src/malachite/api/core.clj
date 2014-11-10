@@ -50,7 +50,7 @@
 (defn api-routes []
   (routes
    (GET "/" [] (response {:root true}))
-   (POST "/" [] (response {:root true :post true})
+   (POST "/" [] (response {:root true :post true}))
    (POST "/users" [] add-user)
    (GET "/users/:user_id/tracks" [user-id] find-user-tracks)
    (POST "/users/:user_id/playlists" [user-id] add-playlist)
