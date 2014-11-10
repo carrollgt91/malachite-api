@@ -78,12 +78,7 @@
       wrap-json-response
       wrap-json-body
       wrap-params
-      (wrap-cors :access-control-allow-origin #"http://lvh.me"
-                 :access-control-allow-methods [:get :put :post]
-                 :access-control-allow-headers ["Content-Type"])
-      (wrap-cors :access-control-allow-origin #"http://lvh.me:8080"
-                 :access-control-allow-methods [:get :put :post]
-                 :access-control-allow-headers ["Content-Type"])))
+      ))
 
 (defn init []
   (users/create-table db)
