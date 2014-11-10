@@ -39,12 +39,15 @@
 (defn handle-preflight-options [hdlr]
   (fn [req]
     (if (= :options (:request-method req))
-      (-> (response {:yup "yup"})
+      (-> (response {})
           (status 200)
           (header "Access-Control-Allow-Origin" "*")
           (header "Access-Control-Request-Method" "POST,GET,PUT,DELETE,OPTIONS")
           (header "Access-Control-Allow-Headers" "X-Requested-With,Content-Type"))
-      (hdlr req))))
+      (-> (hdlr req)
+          (header "Access-Control-Allow-Origin" "*")
+          (header "Access-Control-Request-Method" "POST,GET,PUT,DELETE,OPTIONS")
+          (header "Access-Control-Allow-Headers" "X-Requested-With,Content-Type")))))
 
 (defn ensure-json [hdlr]
   (fn [req]
