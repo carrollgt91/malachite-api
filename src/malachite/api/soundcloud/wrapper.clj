@@ -1,7 +1,6 @@
 (ns malachite.api.soundcloud.wrapper
   (:require [clj-http.client :as http]
-            [cheshire.core :refer :all])
-  (:use alex-and-georges.debug-repl))
+            [cheshire.core :refer :all]))
 
 (def ^:private client-id "251c9152fb3757d609504877ed494ae0")
 

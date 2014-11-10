@@ -1,5 +1,4 @@
 (ns malachite.api.user.handler
-  (:use alex-and-georges.debug-repl)
   (:require [malachite.api.user.model :refer [create-user
                                               save-likes
                                               get-user-playqueue]]

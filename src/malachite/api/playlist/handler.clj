@@ -1,5 +1,4 @@
 (ns malachite.api.playlist.handler
-  (:use alex-and-georges.debug-repl)
   (:require [malachite.api.playlist.model :refer [create-playlist
                                                   find-by-user]]
             [ring.util.response :refer [response status]]))

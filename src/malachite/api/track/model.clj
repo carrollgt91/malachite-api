@@ -1,5 +1,4 @@
 (ns malachite.api.track.model
-  (:use alex-and-georges.debug-repl)
   (:require [clojure.java.jdbc :as db]))
 
 (defn create-user-track-table [db]

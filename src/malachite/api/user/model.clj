@@ -1,5 +1,4 @@
 (ns malachite.api.user.model
-  (:use alex-and-georges.debug-repl)
   (:require [clojure.java.jdbc :as db]
             [malachite.api.soundcloud.wrapper :as sc]
             [malachite.api.track.model :as track-model]))

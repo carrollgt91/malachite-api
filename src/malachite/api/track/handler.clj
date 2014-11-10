@@ -1,5 +1,4 @@
 (ns malachite.api.track.handler
-  (:use alex-and-georges.debug-repl)
   (:require [malachite.api.track.model :refer [create-track
                                                find-by-user
                                                update-track

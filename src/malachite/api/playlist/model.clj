@@ -1,5 +1,4 @@
 (ns malachite.api.playlist.model
-  (:use alex-and-georges.debug-repl)
   (:require [clojure.java.jdbc :as db]))
 
 (defn create-table [db]
