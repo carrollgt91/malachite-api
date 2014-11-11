@@ -34,18 +34,20 @@
    (= (lower-case (str (get-in req [:params "format"])))
       "json")))
 
-(defn handle-preflight-options [hdlr]
+(defn- add-cors-headers [res]
+  (-> res
+    (header "Access-Control-Allow-Origin" "*")
+    (header "Access-Control-Request-Method" "POST,GET,PUT,DELETE,OPTIONS")
+    (header "Access-Control-Allow-Headers" "X-Requested-With,Content-Type")))
+
+(defn handle-cors [hdlr]
   (fn [req]
     (if (= :options (:request-method req))
       (-> (response {})
           (status 200)
-          (header "Access-Control-Allow-Origin" "*")
-          (header "Access-Control-Request-Method" "POST,GET,PUT,DELETE,OPTIONS")
-          (header "Access-Control-Allow-Headers" "X-Requested-With,Content-Type"))
+          add-cors-headers)
       (-> (hdlr req)
-          (header "Access-Control-Allow-Origin" "*")
-          (header "Access-Control-Request-Method" "POST,GET,PUT,DELETE,OPTIONS")
-          (header "Access-Control-Allow-Headers" "X-Requested-With,Content-Type")))))
+          add-cors-headers))))
 
 (defn ensure-json [hdlr]
   (fn [req]
@@ -85,7 +87,7 @@
 
 (def app
   (-> app-routes
-      handle-preflight-options
+      handle-cors
       wrap-db
       wrap-file-info
       wrap-json-response
