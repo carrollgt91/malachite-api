@@ -2,17 +2,15 @@
   (:require [clj-http.client :as http]
             [cheshire.core :refer :all]))
 
-(def ^:private client-id "251c9152fb3757d609504877ed494ae0")
-
 (defn- streamable? [track]
   (get track "streamable"))
 
-(defn likes [user-id]
+(defn likes [user-id access-token]
   (let [resp (http/get 
               (str "https://api.soundcloud.com/users/" 
-              "9027201" 
-              "/favorites?client_id="
-              client-id
+              user-id 
+              "/favorites?oauth_token="
+              access-token
               "&format=json"))
         parsed-resp (parse-string (:body resp))
         filtered-resp (filter streamable? parsed-resp)]
