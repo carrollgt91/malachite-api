@@ -1,8 +1,7 @@
 (ns malachite.api.user.model
   (:require [clojure.java.jdbc :as db]
             [malachite.api.soundcloud.wrapper :as sc]
-            [malachite.api.track.model :as track-model])
-  (:use alex-and-georges.debug-repl))
+            [malachite.api.track.model :as track-model]))
 
 (defn- add-access-token-to-user [db]
   (try

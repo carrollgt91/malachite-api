@@ -4,8 +4,7 @@
                                               find-user
                                               get-user-playqueue]]
             [malachite.api.playlist.model :refer [create-playlist]]
-            [ring.util.response :refer [response status]])
-  (:use alex-and-georges.debug-repl))
+            [ring.util.response :refer [response status]]))
 
 (defn auth-user [req]
   (let [db (:malachite.api/db req)
