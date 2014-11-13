@@ -33,14 +33,15 @@
 
 (defn create-user [db username soundcloud-id access-token]
   (try
-    (first (db/query
+    (let [res (first (db/query
              db
              ["INSERT INTO users (username, soundcloud_id, access_token)
                VALUES (?, ?, ?)
                RETURNING *"
               username
               (Integer. soundcloud-id)
-              access-token]))
+              access-token]))]
+      res)
     (catch Exception e {:error "User already exists"})))
 
 (defn update-user [db soundcloud-id access-token]
@@ -55,7 +56,7 @@
     (catch Exception e {:error "User does not exist"})))
 
 (defn create-or-update-user [db username soundcloud-id access-token]
-  (if (find-user db soundcloud-id)
+  (if (not (contains? (find-user db soundcloud-id) :error))
     (update-user db soundcloud-id access-token)
     (create-user db username soundcloud-id access-token)))
 
