@@ -1,7 +1,8 @@
 (ns malachite.api.user.model
   (:require [clojure.java.jdbc :as db]
             [malachite.api.soundcloud.wrapper :as sc]
-            [malachite.api.track.model :as track-model]))
+            [malachite.api.track.model :as track-model])
+  (:use alex-and-georges.debug-repl))
 
 (defn- add-access-token-to-user [db]
   (try
@@ -18,23 +19,46 @@
   (db/execute!
    db
    ["CREATE TABLE IF NOT EXISTS users
-    (user_id SERIAL PRIMARY KEY,
-    username TEXT NOT NULL UNIQUE,
-    soundcloud_id INTEGER NOT NULL UNIQUE,
-    date_created TIMESTAMPTZ NOT NULL DEFAULT now())"])
+     (user_id SERIAL PRIMARY KEY,
+     username TEXT NOT NULL UNIQUE,
+     soundcloud_id INTEGER NOT NULL UNIQUE,
+     date_created TIMESTAMPTZ NOT NULL DEFAULT now())"])
   (add-access-token-to-user db))
+(defn find-user [db soundcloud-id]
+  (let [user (first (db/query
+                      db
+                      ["SELECT * FROM users WHERE soundcloud_id = ?"
+                       (Integer. soundcloud-id)]))]
+    (or user
+        {:error "Not found"})))
 
 (defn create-user [db username soundcloud-id access-token]
   (try
     (first (db/query
-                 db
-                 ["INSERT INTO users (username, soundcloud_id, access_token)
-                   VALUES (?, ?, ?)
-                   RETURNING *"
-                  username
-                  (Integer. soundcloud-id)
-                  access-token]))
+             db
+             ["INSERT INTO users (username, soundcloud_id, access_token)
+               VALUES (?, ?, ?)
+               RETURNING *"
+              username
+              (Integer. soundcloud-id)
+              access-token]))
     (catch Exception e {:error "User already exists"})))
+
+(defn update-user [db soundcloud-id access-token]
+  (try
+    (first (db/query
+             db
+             ["UPDATE users SET access_token = ?
+               WHERE soundcloud_id = ?
+               RETURNING *"
+               access-token
+               (Integer. soundcloud-id)]))
+    (catch Exception e {:error "User does not exist"})))
+
+(defn create-or-update-user [db username soundcloud-id access-token]
+  (if (find-user db soundcloud-id)
+    (update-user db soundcloud-id access-token)
+    (create-user db username soundcloud-id access-token)))
 
 (defn save-likes [db user-id user-soundcloud-id access-token]  
   (let [likes (sc/likes user-soundcloud-id access-token)]
@@ -54,9 +78,3 @@
         tracks
           (track-model/find-by-playlist db (get playqueue-id :playlist_id))]
     tracks))
-
-(defn find-user [db id]
-  (db/query
-    db
-    ["SELECT * FROM users WHERE id = ?"
-     id]))
